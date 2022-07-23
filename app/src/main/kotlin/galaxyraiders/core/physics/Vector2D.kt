@@ -59,11 +59,11 @@ data class Vector2D(val dx: Double, val dy: Double) {
   }
 
   fun scalarProject(target: Vector2D): Double {
-    return INVALID_DOUBLE
+    return (target.dx * v.dx + target.dy * v.dy) / target.magnitude
   }
 
   fun vectorProject(target: Vector2D): Vector2D {
-    return INVALID_VECTOR
+    return (((target.dx * v.dx + target.dy * v.dy) / target.magnitude) * target.unit)
   }
 }
 
