@@ -13,7 +13,7 @@ data class Vector2D(val dx: Double, val dy: Double) {
     get() = Math.sqrt(dx * dx + dy * dy)
 
   val radiant: Double
-    get(){
+    get() = {
       if(dy / magnitude < 0){
         return -1.0 * Math.abs(Math.acos(dx / magnitude))
       }
