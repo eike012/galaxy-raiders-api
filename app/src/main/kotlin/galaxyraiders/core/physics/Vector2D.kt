@@ -3,7 +3,7 @@ package galaxyraiders.core.physics
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
-@JsonIgnoreProperties("unit", "normal", "degree", "magnitude")
+@JsonIgnoreProperties("unit", "normal",  "degree", "magnitude")
 data class Vector2D(val dx: Double, val dy: Double) {
   override fun toString(): String {
     return "Vector2D(dx=$dx, dy=$dy)"
@@ -12,13 +12,10 @@ data class Vector2D(val dx: Double, val dy: Double) {
   val magnitude: Double
     get() = Math.sqrt(dx * dx + dy * dy)
 
+  // atan2 retorna o arco cuja tangente 
+  // e o angulo entre o cateto dy e dx  
   val radiant: Double
-    get() = {
-      if(dy / magnitude < 0){
-        return -1.0 * Math.abs(Math.acos(dx / magnitude))
-      }
-      return Math.abs(Math.acos(dx / magnitude))
-    }
+    get() = Math.atan2(dy,dx)
 
   val degree: Double
     get() = (180 * radiant) / Math.PI
@@ -58,11 +55,12 @@ data class Vector2D(val dx: Double, val dy: Double) {
   }
 
   fun scalarProject(target: Vector2D): Double {
-    return (target.dx * v.dx + target.dy * v.dy) / target.magnitude
+    
+    return (target.dx * dx + target.dy * dy) / target.magnitude
   }
 
   fun vectorProject(target: Vector2D): Vector2D {
-    return (((target.dx * v.dx + target.dy * v.dy) / target.magnitude) * target.unit)
+    return (((target.dx * dx + target.dy * dy) / target.magnitude) * target.unit)
   }
 }
 
