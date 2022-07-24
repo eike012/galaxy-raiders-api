@@ -17,7 +17,6 @@ data class Vector2D(val dx: Double, val dy: Double) {
       if(dy / magnitude < 0){
         return -1.0 * Math.abs(Math.acos(dx / magnitude))
       }
-
       return Math.abs(Math.acos(dx / magnitude))
     }
 
