@@ -163,15 +163,6 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   private fun createExplosion (position:Point2D): Explosion {
     return Explosion (position, initialVelocity=Vector2D(0.0, 0.0), radius=1.0, mass=0.5)
   }
-  
-  fun hit (missele:Missile, asteroid: Asteroid) {
-
-    if (missele.initialPosition.distance(asteroid.initialPosition) <= missele.radius + asteroid.radius) {
-      return true
-    }
-
-    return false
-  }
 
   fun generateExplosions () {
 
@@ -179,7 +170,7 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
       for (missele in this.missiles) {
         
-        if (hit(missele, asteroid)==true) {
+        if (missele.initialPosition.distance(asteroid.initialPosition) <= missele.radius + asteroid.radius) {
           this.explosions += createExplosion(missele.initialPosition)
         }
 
