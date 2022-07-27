@@ -4,6 +4,9 @@ import galaxyraiders.Config
 import galaxyraiders.core.physics.Point2D
 import galaxyraiders.core.physics.Vector2D
 import galaxyraiders.ports.RandomGenerator
+import galaxyraiders.core.game.Missile
+import galaxyraiders.core.game.Asteroid
+import galaxyraiders.core.game.Explosion
 
 object SpaceFieldConfig {
   private val config = Config(prefix = "GR__CORE__GAME__SPACE_FIELD__")
@@ -31,6 +34,9 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   val boundaryY = 0.0..height.toDouble()
 
   val ship = initializeShip()
+
+  var explosions: List<Explosion> = emptyList()
+    private set
 
   var missiles: List<Missile> = emptyList()
     private set
@@ -153,4 +159,35 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
     return scaledMass * SpaceFieldConfig.asteroidMassMultiplier
   }
+
+  private fun createExplosion (position:Point2D): Explosion {
+    return Explosion (position, initialVelocity=Vector2D(0.0, 0.0), radius=1.0, mass=0.5)
+  }
+  
+  fun hit (missele:Missile, asteroid: Asteroid) {
+
+    if (missele.initialPosition.distance(asteroid.initialPosition) <= missele.radius + asteroid.radius) {
+      return true
+    }
+
+    return false
+  }
+
+  fun generateExplosions () {
+
+    for (asteroid in this.asteroids) {
+
+      for (missele in this.missiles) {
+        
+        if (hit(missele, asteroid)==true) {
+          this.explosions += createExplosion(missele.initialPosition)
+        }
+
+      }
+
+    }
+
+  }
+
+  
 }
