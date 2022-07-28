@@ -42,7 +42,7 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     private set
 
   val spaceObjects: MutableList<SpaceObject>
-    get() = mutableListOf(ListOf(this.ship) + this.missiles + this.asteroids + this.explosions)
+    get() = mutableListOf(listOf(this.ship) + this.missiles + this.asteroids + this.explosions)
 
     // get() = mutableListOf(this.ship, this.missiles, this.asteroids, this.explosions)
 
