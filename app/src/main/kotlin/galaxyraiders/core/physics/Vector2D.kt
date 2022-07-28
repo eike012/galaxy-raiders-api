@@ -1,9 +1,10 @@
-@file:Suppress("UNUSED_PARAMETER") // <- REMOVE
 package galaxyraiders.core.physics
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
-@JsonIgnoreProperties("unit", "normal",  "degree", "magnitude")
+private const val halfCircle = 180
+
+@JsonIgnoreProperties("unit", "normal", "degree", "magnitude")
 data class Vector2D(val dx: Double, val dy: Double) {
   override fun toString(): String {
     return "Vector2D(dx=$dx, dy=$dy)"
@@ -12,13 +13,13 @@ data class Vector2D(val dx: Double, val dy: Double) {
   val magnitude: Double
     get() = Math.sqrt(dx * dx + dy * dy)
 
-  // atan2 retorna o arco cuja tangente 
-  // e o angulo entre o cateto dy e dx  
+  // atan2 retorna o arco cuja tangente
+  // e o angulo entre o cateto dy e dx
   val radiant: Double
-    get() = Math.atan2(dy,dx)
+    get() = Math.atan2(dy, dx)
 
   val degree: Double
-    get() = (180 * radiant) / Math.PI
+    get() = (halfCircle * radiant) / Math.PI
 
   val unit: Vector2D
     get() = Vector2D(dx / magnitude, dy / magnitude)
@@ -55,7 +56,7 @@ data class Vector2D(val dx: Double, val dy: Double) {
   }
 
   fun scalarProject(target: Vector2D): Double {
-    
+
     return (target.dx * dx + target.dy * dy) / target.magnitude
   }
 

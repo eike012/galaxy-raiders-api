@@ -82,6 +82,11 @@ class GameEngine(
     this.moveSpaceObjects()
     this.trimSpaceObjects()
     this.generateAsteroids()
+    this.generateExplosions()
+  }
+
+  fun generateExplosions() {
+    this.field.generateExplosions()
   }
 
   fun handleCollisions() {

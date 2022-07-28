@@ -4,9 +4,6 @@ import galaxyraiders.Config
 import galaxyraiders.core.physics.Point2D
 import galaxyraiders.core.physics.Vector2D
 import galaxyraiders.ports.RandomGenerator
-import galaxyraiders.core.game.Missile
-import galaxyraiders.core.game.Asteroid
-import galaxyraiders.core.game.Explosion
 
 object SpaceFieldConfig {
   private val config = Config(prefix = "GR__CORE__GAME__SPACE_FIELD__")
@@ -35,17 +32,19 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
   val ship = initializeShip()
 
-  var explosions: List<Explosion> = emptyList()
+  var explosions: MutableList<Explosion> =  mutableListOf()
     private set
 
-  var missiles: List<Missile> = emptyList()
+  var missiles: MutableList<Missile> =  mutableListOf()
     private set
 
-  var asteroids: List<Asteroid> = emptyList()
+  var asteroids: MutableList<Asteroid> =  mutableListOf()
     private set
 
-  val spaceObjects: List<SpaceObject>
-    get() = listOf(this.ship) + this.missiles + this.asteroids
+  val spaceObjects: MutableList<SpaceObject>
+    get() = mutableListOf(ListOf(this.ship) + this.missiles + this.asteroids + this.explosions)
+
+    // get() = mutableListOf(this.ship, this.missiles, this.asteroids, this.explosions)
 
   fun moveShip() {
     this.ship.move(boundaryX, boundaryY)
@@ -68,15 +67,17 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   }
 
   fun trimMissiles() {
-    this.missiles = this.missiles.filter {
-      it.inBoundaries(this.boundaryX, this.boundaryY)
-    }
+    this.missiles.removeAll{ ! it.inBoundaries(this.boundaryX, this.boundaryY)}
+    //  = this.missiles.filter {
+    //   it.inBoundaries(this.boundaryX, this.boundaryY)
+    // }
   }
 
   fun trimAsteroids() {
-    this.asteroids = this.asteroids.filter {
-      it.inBoundaries(this.boundaryX, this.boundaryY)
-    }
+    this.asteroids.removeAll{ ! it.inBoundaries(this.boundaryX, this.boundaryY) }
+    // this.asteroids = this.asteroids.filter {
+    //   it.inBoundaries(this.boundaryX, this.boundaryY)
+    // }
   }
 
   private fun initializeShip(): SpaceShip {
@@ -160,25 +161,28 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     return scaledMass * SpaceFieldConfig.asteroidMassMultiplier
   }
 
-  private fun createExplosion (position:Point2D): Explosion {
-    return Explosion (position, initialVelocity=Vector2D(0.0, 0.0), radius=1.0, mass=0.5)
+  private fun createExplosion(position: Point2D): Explosion {
+    return Explosion(position, initialVelocity = Vector2D(0.0, 0.0), radius = 1.0, mass = 0.5)
   }
 
-  fun generateExplosions () {
+  fun generateExplosions() {
+
+    // tiramos os que ja explodiram
+    this.explosions.clear()
 
     for (asteroid in this.asteroids) {
 
-      for (missele in this.missiles) {
-        
-        if (missele.initialPosition.distance(asteroid.initialPosition) <= missele.radius + asteroid.radius) {
-          this.explosions += createExplosion(missele.initialPosition)
+      for (missile in this.missiles) {
+
+        // explodiu
+        if (missile.initialPosition.distance(asteroid.initialPosition) <= missile.radius + asteroid.radius) {
+
+          this.explosions += createExplosion(missile.initialPosition)
+
+          this.missiles.remove(missile)
+          this.asteroids.remove(asteroid)
         }
-
       }
-
     }
-
   }
-
-  
 }
