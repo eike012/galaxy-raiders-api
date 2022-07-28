@@ -177,9 +177,9 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
       for (missile in this.missiles) {
 
         // explodiu
-        if (missile.initialPosition.distance(asteroid.initialPosition) <= missile.radius + asteroid.radius) {
+        if (missile.center.distance(asteroid.center) <= missile.radius + asteroid.radius) {
 
-          this.explosions += createExplosion(missile.initialPosition)
+          this.explosions += createExplosion(missile.center)
 
           this.missiles.remove(missile)
           this.asteroids.remove(asteroid)
