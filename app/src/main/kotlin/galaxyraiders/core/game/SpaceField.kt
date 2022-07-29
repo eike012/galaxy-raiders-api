@@ -172,6 +172,9 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     // tiramos os que ja explodiram
     this.explosions.clear()
 
+    var rm_missiles = mutableListOf<Missile>()
+    var rm_asteroids = mutableListOf<Asteroid>()
+
     for (asteroid in this.asteroids) {
 
       for (missile in this.missiles) {
@@ -181,10 +184,13 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
           this.explosions += createExplosion(missile.center)
 
-          this.missiles.remove(missile)
-          this.asteroids.remove(asteroid)
+          rm_missiles.add(missile)
+          rm_asteroids.add(asteroid)
         }
       }
     }
+
+    this.missiles.removeAll(rm_missiles)
+    this.asteroids.removeAll(rm_asteroids)
   }
 }
