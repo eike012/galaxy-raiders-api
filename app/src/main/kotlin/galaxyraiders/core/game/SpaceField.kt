@@ -32,21 +32,21 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
   val ship = initializeShip()
 
-  var explosions: MutableList<Explosion> =  mutableListOf()
+  var explosions: MutableList<Explosion> = mutableListOf()
     private set
 
-  var missiles: MutableList<Missile> =  mutableListOf()
+  var missiles: MutableList<Missile> = mutableListOf()
     private set
 
-  var asteroids: MutableList<Asteroid> =  mutableListOf()
+  var asteroids: MutableList<Asteroid> = mutableListOf()
     private set
 
-  val space_obj_list = listOf(this.ship) + this.missiles + this.asteroids + this.explosions
+  val spaceObjList = listOf(this.ship) + this.missiles + this.asteroids + this.explosions
 
   val spaceObjects: MutableList<SpaceObject>
-    get() = space_obj_list.toMutableList()
+    get() = spaceObjList.toMutableList()
 
-    // get() = mutableListOf(this.ship, this.missiles, this.asteroids, this.explosions)
+  // get() = mutableListOf(this.ship, this.missiles, this.asteroids, this.explosions)
 
   fun moveShip() {
     this.ship.move(boundaryX, boundaryY)
@@ -69,14 +69,14 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   }
 
   fun trimMissiles() {
-    this.missiles.removeAll{ ! it.inBoundaries(this.boundaryX, this.boundaryY)}
+    this.missiles.removeAll { ! it.inBoundaries(this.boundaryX, this.boundaryY) }
     //  = this.missiles.filter {
     //   it.inBoundaries(this.boundaryX, this.boundaryY)
     // }
   }
 
   fun trimAsteroids() {
-    this.asteroids.removeAll{ ! it.inBoundaries(this.boundaryX, this.boundaryY) }
+    this.asteroids.removeAll { ! it.inBoundaries(this.boundaryX, this.boundaryY) }
     // this.asteroids = this.asteroids.filter {
     //   it.inBoundaries(this.boundaryX, this.boundaryY)
     // }
@@ -164,7 +164,7 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   }
 
   private fun createExplosion(position: Point2D): Explosion {
-    return Explosion(position, initialVelocity = Vector2D(0.0, 0.0), radius = 1.0, mass = 0.5)
+    return Explosion(position, initialVelocity = Vector2D(0.0, 0.0), radius = 3.0, mass = 0.5)
   }
 
   fun generateExplosions() {
@@ -172,8 +172,8 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     // tiramos os que ja explodiram
     this.explosions.clear()
 
-    var rm_missiles = mutableListOf<Missile>()
-    var rm_asteroids = mutableListOf<Asteroid>()
+    var rmMissiles = mutableListOf<Missile>()
+    var rmAsteroids = mutableListOf<Asteroid>()
 
     for (asteroid in this.asteroids) {
 
@@ -184,13 +184,13 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
           this.explosions += createExplosion(missile.center)
 
-          rm_missiles.add(missile)
-          rm_asteroids.add(asteroid)
+          rmMissiles.add(missile)
+          rmAsteroids.add(asteroid)
         }
       }
     }
 
-    this.missiles.removeAll(rm_missiles)
-    this.asteroids.removeAll(rm_asteroids)
+    this.missiles.removeAll(rmMissiles)
+    this.asteroids.removeAll(rmAsteroids)
   }
 }
